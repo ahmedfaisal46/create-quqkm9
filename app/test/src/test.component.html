@@ -1,0 +1,36 @@
+<div class="multiselect-dropdown">
+  <span class="dropdown-btn" (click)="toggleDropdown($event)">
+    <span *ngIf="selectedItems.length == 0">{{ placeholder }}</span>
+    <span class="selected-item" *ngFor="let item of selectedItems">
+      <span>{{ item.value }}</span>
+      <span class="removeSelection" (click)="onItemClick($event, item)">
+        &nbsp;X
+      </span>
+    </span>
+    <span class="dropdown-multiselect__caret"></span>
+  </span>
+  <div class="dropdown-list" [hidden]="!isDropdownOpen">
+    <ul class="data">
+      <li
+        *ngFor="let item of _data; let i = index"
+        (click)="onItemClick($event, item)"
+        class="multiselect-item-checkbox"
+      >
+        <ng-template #defaultTemplate>
+          <input
+            type="checkbox"
+            [attr.aria-label]="item.value"
+            [checked]="isSelected(item)"
+          />
+          <div>{{ item.value }}</div>
+        </ng-template>
+
+        <ng-container
+          [ngTemplateOutlet]="optionTemplate || defaultTemplate"
+          [ngTemplateOutletContext]="{ $implicit: option, index: i }"
+        >
+        </ng-container>
+      </li>
+    </ul>
+  </div>
+</div>

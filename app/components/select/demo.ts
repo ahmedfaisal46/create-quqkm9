@@ -7,18 +7,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DemoComponent implements OnInit {
   myForm: FormGroup;
-  disabled = false;
-  ShowFilter = true;
-  showAll = true;
-  limitSelection = false;
-  disableBangalore = true;
-  cities: Array<any> = [];
+  values: Array<any> = [];
   selectedItems: Array<any> = [];
 
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
-    this.cities = [
+    this.values = [
       { id: 1, value: 'Value one' },
       { id: 2, value: 'Value two' },
       { id: 3, value: 'Value three' },
@@ -28,7 +23,7 @@ export class DemoComponent implements OnInit {
     ];
 
     this.myForm = this.fb.group({
-      city: [''],
+      options: [''],
     });
   }
 
@@ -41,9 +36,5 @@ export class DemoComponent implements OnInit {
 
   onDropDownClose() {
     console.log('dropdown closed');
-  }
-
-  toogleShowAll() {
-    this.showAll = !this.showAll;
   }
 }

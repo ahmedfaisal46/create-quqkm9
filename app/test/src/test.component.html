@@ -1,20 +1,22 @@
-<div class="multiselect-dropdown">
-  <span class="dropdown-btn" (click)="toggleDropdown($event)">
-    <span *ngIf="selectedItems.length == 0">{{ placeholder }}</span>
-    <span class="selected-item" *ngFor="let item of selectedItems">
-      <span>{{ item.value }}</span>
-      <span class="removeSelection" (click)="onItemClick($event, item)">
-        &nbsp;X
+<div class="dropdown" (clickOutside)="closeDropdown()">
+  <span class="dropdown-toggle" (click)="toggleDropdown($event)">
+    <div class="selected-item-wrapper">
+      <span *ngIf="selectedItems.length == 0">{{ placeholder }}</span>
+      <span class="selected-item" *ngFor="let item of selectedItems">
+        <span>{{ item.value }}</span>
+        <span class="removeSelection" (click)="onItemClick($event, item)">
+          X
+        </span>
       </span>
-    </span>
-    <span class="dropdown-multiselect__caret"></span>
+    </div>
+    <span class="dropdown-arrow"></span>
   </span>
-  <div class="dropdown-list" [hidden]="!isDropdownOpen">
-    <ul class="data">
+  <div class="dropdown-options" [hidden]="!isDropdownOpen">
+    <ul class="dropdown-options-list">
       <li
         *ngFor="let item of _data; let i = index"
         (click)="onItemClick($event, item)"
-        class="multiselect-item-checkbox"
+        class="checkbox"
       >
         <ng-template #defaultTemplate>
           <input

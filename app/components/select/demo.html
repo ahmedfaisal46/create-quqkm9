@@ -4,10 +4,9 @@
       <h3>Select Multiple Test</h3>
       <form [formGroup]="myForm">
         <test
-          name="city"
           [placeholder]="'Select Test'"
-          [data]="cities"
-          formControlName="city"
+          [data]="values"
+          formControlName="options"
           (onDropDownClose)="onDropDownClose()"
           (onSelect)="onItemSelect($event)"
           (onDeSelect)="onItemDeSelect($event)"

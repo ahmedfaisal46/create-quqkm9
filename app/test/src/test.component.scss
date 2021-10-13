@@ -1,4 +1,4 @@
-$base-color: #337ab7;
+$base-color: black;
 $disable-background-color: #eceeef;
 .dropdown {
   position: relative;
@@ -20,7 +20,7 @@ $disable-background-color: #eceeef;
     .selected-item-wrapper {
       width: 80%;
     }
-    .selected-item {
+    .selected-item-list {
       border: 1px solid $base-color;
       margin-right: 4px;
       background: $base-color;
@@ -30,21 +30,19 @@ $disable-background-color: #eceeef;
       float: left;
       display: flex;
       max-width: 100px;
+      white-space: nowrap;
       margin: 3px;
       align-items: center;
-      span {
+      .selected-item {
         overflow: hidden;
         text-overflow: ellipsis;
       }
       .removeSelection {
-        padding: 2px;
-        margin-right: 2px;
         color: white;
-        border: 2px solid white;
         font-size: 12px;
       }
     }
-    .selected-item:hover {
+    .selected-item-list:hover {
       box-shadow: 1px 1px #959595;
     }
     .dropdown-arrow,

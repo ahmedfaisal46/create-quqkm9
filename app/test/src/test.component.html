@@ -2,14 +2,14 @@
   <span class="dropdown-toggle" (click)="toggleDropdown($event)">
     <div class="selected-item-wrapper">
       <span *ngIf="selectedOptions.length == 0">{{ placeholder }}</span>
-      <span class="selected-item" *ngFor="let selected of selectedOptions">
+      <span class="selected-item-list" *ngFor="let selected of selectedOptions">
         <span
           class="removeSelection"
           (click)="onOptionSelect($event, selected)"
         >
-          X
+          x &nbsp;
         </span>
-        <span>{{ selected.value }}</span>
+        <span class="selected-item">{{ selected.value }}</span>
       </span>
     </div>
     <span

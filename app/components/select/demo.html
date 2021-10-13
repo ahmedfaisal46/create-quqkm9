@@ -5,11 +5,11 @@
       <form [formGroup]="myForm">
         <test
           [placeholder]="'Select Test'"
-          [data]="values"
+          [options]="values"
           formControlName="options"
           (onDropDownClose)="onDropDownClose()"
           (onSelect)="onItemSelect($event)"
-          (onDeSelect)="onItemDeSelect($event)"
+          (onUnSelect)="onItemUnSelect($event)"
         >
         </test>
       </form>

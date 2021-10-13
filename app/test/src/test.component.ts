@@ -1,145 +1,139 @@
-import { Component, HostListener, forwardRef, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef, TemplateRef } from "@angular/core";
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
+import {
+  Component,
+  forwardRef,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  TemplateRef,
+} from '@angular/core';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 export const DROPDOWN_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => TestComponent),
-  multi: true
+  multi: true,
 };
 
 @Component({
-  selector: "test",
-  templateUrl: "./test.component.html",
-  styleUrls: ["./test.component.scss"],
+  selector: 'test',
+  templateUrl: './test.component.html',
+  styleUrls: ['./test.component.scss'],
   providers: [DROPDOWN_CONTROL_VALUE_ACCESSOR],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestComponent implements ControlValueAccessor {
-  public _data: Array<Item> = [];
-  public selectedItems: Array<Item> = [];
-  public isDropdownOpen = false;
-  private _sourceDataType = null; // to keep note of the source data type. could be array of string/number/object
-  private _sourceDataFields: Array<String> = []; // store source data fields names
+  public _options: Array<Option> = [];
+  public selectedOptions: Array<Option> = [];
+  public isOpen = false;
+  private _sourceDataType = null;
+  private _sourceDataFields: Array<String> = [];
 
   @Input()
-  placeholder: string = "Select";
+  placeholder: string = 'Select';
 
   @Input()
   optionTemplate: TemplateRef<any>;
 
   @Input()
-  public set data(value: Array<any>) {
+  public set options(value: Array<any>) {
     if (!value) {
-      this._data = [];
+      this._options = [];
     } else {
-      const firstItem = value[0];
-      this._sourceDataType = typeof firstItem;
-      this._sourceDataFields = this.getFields(firstItem);
-      this._data = value.map((item: any) => {
-        if (typeof item === "string" || typeof item === "number") {
-          return new Item(item)
+      const firstOption = value[0];
+      this._sourceDataType = typeof firstOption;
+      this._sourceDataFields = this.getFields(firstOption);
+      this._options = value.map((option: any) => {
+        if (typeof option === 'string' || typeof option === 'number') {
+          return new Option(option);
+        } else {
+          return new Option({
+            id: option['id'],
+            value: option['value'],
+          });
         }
-        else {
-          return new Item({
-            id: item["id"],
-            value: item["value"],
-          })
-        }
-      }
-      );
+      });
     }
   }
 
-  @Output("onDropDownClose")
-  onDropDownClose: EventEmitter<Item> = new EventEmitter<any>();
+  @Output('onDropDownClose')
+  onDropDownClose: EventEmitter<Option> = new EventEmitter<any>();
 
-  @Output("onSelect")
-  onSelect: EventEmitter<Item> = new EventEmitter<any>();
+  @Output('onSelect')
+  onSelect: EventEmitter<Option> = new EventEmitter<any>();
 
-  @Output("onDeSelect")
-  onDeSelect: EventEmitter<Item> = new EventEmitter<any>();
+  @Output('onUnSelect')
+  onUnSelect: EventEmitter<Option> = new EventEmitter<any>();
 
-  constructor(
-    private cdr: ChangeDetectorRef
-  ) { }
+  constructor(private cdr: ChangeDetectorRef) {}
 
-  registerOnChange(fn: any): void {
-      
-  }
-  registerOnTouched(fn: any): void {
-   
-  }
-  
+  registerOnChange(fn: any): void {}
+  registerOnTouched(fn: any): void {}
 
-  onItemClick($event: any, item: Item) {
-    if (!this.isSelected(item)) {
-      this.addSelected(item);
+  onOptionSelect($event: any, option: Option) {
+    if (!this.isSelected(option)) {
+      this.addSelected(option);
     } else {
-      this.removeSelected(item);
+      this.removeSelected(option);
     }
-
   }
 
   writeValue(value: any) {
     if (value !== undefined && value !== null && value.length > 0) {
-
-      const _data = value.map((item: any) => {
-        if (typeof item === "string" || typeof item === "number") {
-          return new Item(item)
-        }
-        else {
-          return new Item({
-            id: item["id"],
-            value: item["value"]
-          })
+      const _data = value.map((option: any) => {
+        if (typeof option === 'string' || typeof option === 'number') {
+          return new Option(option);
+        } else {
+          return new Option({
+            id: option['id'],
+            value: option['value'],
+          });
         }
       });
-      
-        this.selectedItems = _data;
-      
 
+      this.selectedOptions = _data;
     } else {
-      this.selectedItems = [];
+      this.selectedOptions = [];
     }
 
     this.cdr.markForCheck();
   }
 
-  trackByFn(index, item) {
-    return item.id;
+  trackByFn(index, option) {
+    return option.id;
   }
 
-  isSelected(clickedItem: Item) {
+  isSelected(option: Option) {
     let found = false;
-    this.selectedItems.forEach(item => {
-      if (clickedItem.id === item.id) {
+    this.selectedOptions.forEach((selected) => {
+      if (option.id === selected.id) {
         found = true;
       }
     });
     return found;
   }
 
-  addSelected(item: Item) {
-    
-    this.selectedItems.push(item);
-    
-    this.onSelect.emit(this.emittedValue(item));
+  addSelected(selectedOption: Option) {
+    this.selectedOptions.push(selectedOption);
+
+    this.onSelect.emit(this.emittedValue(selectedOption));
   }
 
-  removeSelected(itemSel: Item) {
-    this.selectedItems.forEach(item => {
-      if (itemSel.id === item.id) {
-        this.selectedItems.splice(this.selectedItems.indexOf(item), 1);
+  removeSelected(unselectedOption: Option) {
+    this.selectedOptions.forEach((selected) => {
+      if (unselectedOption.id === selected.id) {
+        this.selectedOptions.splice(this.selectedOptions.indexOf(selected), 1);
       }
     });
-    this.onDeSelect.emit(this.emittedValue(itemSel));
+    this.onUnSelect.emit(this.emittedValue(unselectedOption));
   }
 
   emittedValue(val: any): any {
     const selected = [];
     if (Array.isArray(val)) {
-      val.map(item => {
-        selected.push(this.objectify(item));
+      val.map((opt) => {
+        selected.push(this.objectify(opt));
       });
     } else {
       if (val) {
@@ -149,12 +143,12 @@ export class TestComponent implements ControlValueAccessor {
     return selected;
   }
 
-  objectify(val: Item) {
+  objectify(val: Option) {
     if (this._sourceDataType === 'object') {
       const obj = {};
-      obj["id"] = val.id;
-      obj["value"] = val.value;
-      
+      obj['id'] = val.id;
+      obj['value'] = val.value;
+
       return obj;
     }
     if (this._sourceDataType === 'number') {
@@ -166,25 +160,23 @@ export class TestComponent implements ControlValueAccessor {
 
   toggleDropdown(evt) {
     evt.preventDefault();
-    this.isDropdownOpen = !this.isDropdownOpen;
-    if (!this.isDropdownOpen) {
+    this.isOpen = !this.isOpen;
+    if (!this.isOpen) {
       this.onDropDownClose.emit();
     }
   }
-  
 
   closeDropdown() {
-    this.isDropdownOpen = false;
+    this.isOpen = false;
     this.onDropDownClose.emit();
   }
 
-
   getFields(inputData) {
     const fields = [];
-    if (typeof inputData !== "object") {
+    if (typeof inputData !== 'object') {
       return fields;
     }
-    // tslint:disable-next-line:forin
+
     for (const prop in inputData) {
       fields.push(prop);
     }
@@ -192,7 +184,7 @@ export class TestComponent implements ControlValueAccessor {
   }
 }
 
-export class Item {
+export class Option {
   id: any;
   value: any;
 
@@ -201,7 +193,7 @@ export class Item {
       this.id = input;
       this.value = input;
     }
-    
+
     if (typeof input === 'object') {
       this.id = input.id;
       this.value = input.value;

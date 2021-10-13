@@ -14,12 +14,13 @@ export class DemoComponent implements OnInit {
 
   ngOnInit() {
     this.values = [
-      { id: 1, value: 'Value one' },
-      { id: 2, value: 'Value two' },
-      { id: 3, value: 'Value three' },
-      { id: 4, value: 'Value four' },
-      { id: 5, value: 'Value five' },
-      { id: 6, value: 'Value six' },
+      { id: 0, value: 'Value one' },
+      { id: 1, value: 'Value two' },
+      { id: 2, value: 'Value three' },
+      { id: 3, value: 'Value four' },
+      { id: 4, value: 'Value five' },
+      { id: 5, value: 'Value six' },
+      { id: 6, value: 'Value seven' },
     ];
 
     this.myForm = this.fb.group({
@@ -30,8 +31,8 @@ export class DemoComponent implements OnInit {
   onItemSelect(item: any) {
     console.log('onItemSelect');
   }
-  onItemDeSelect(item: any) {
-    console.log('onItemDeSelect');
+  onItemUnSelect(item: any) {
+    console.log('onItemUnSelect');
   }
 
   onDropDownClose() {

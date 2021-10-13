@@ -1,30 +1,37 @@
 <div class="dropdown" (clickOutside)="closeDropdown()">
   <span class="dropdown-toggle" (click)="toggleDropdown($event)">
     <div class="selected-item-wrapper">
-      <span *ngIf="selectedItems.length == 0">{{ placeholder }}</span>
-      <span class="selected-item" *ngFor="let item of selectedItems">
-        <span>{{ item.value }}</span>
-        <span class="removeSelection" (click)="onItemClick($event, item)">
+      <span *ngIf="selectedOptions.length == 0">{{ placeholder }}</span>
+      <span class="selected-item" *ngFor="let selected of selectedOptions">
+        <span
+          class="removeSelection"
+          (click)="onOptionSelect($event, selected)"
+        >
           X
         </span>
+        <span>{{ selected.value }}</span>
       </span>
     </div>
-    <span class="dropdown-arrow"></span>
+    <span
+      [ngClass]="
+        !selectedOptions?.length ? 'dropdown-arrow' : 'dropdown-arrow-open'
+      "
+    ></span>
   </span>
-  <div class="dropdown-options" [hidden]="!isDropdownOpen">
+  <div class="dropdown-options" [hidden]="!isOpen">
     <ul class="dropdown-options-list">
       <li
-        *ngFor="let item of _data; let i = index"
-        (click)="onItemClick($event, item)"
-        class="checkbox"
+        *ngFor="let option of _options; let i = index"
+        (click)="onOptionSelect($event, option)"
+        class="option"
       >
         <ng-template #defaultTemplate>
           <input
             type="checkbox"
-            [attr.aria-label]="item.value"
-            [checked]="isSelected(item)"
+            [attr.aria-label]="option.value"
+            [checked]="isSelected(option)"
           />
-          <div>{{ item.value }}</div>
+          <div>{{ option.value }}</div>
         </ng-template>
 
         <ng-container
